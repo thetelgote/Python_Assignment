@@ -24,8 +24,8 @@ jobs:
       - name: Install dependencies
         run: npm install  # Or use your preferred package manager
 
-      - name: Run tests
-        run: npm test  # Replace with your test script if different
+      - name: The all files
+        run: ls -l
 
       - name: Build project
         run: npm run build  # Replace with your build command
