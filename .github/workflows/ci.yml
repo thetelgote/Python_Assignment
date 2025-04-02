@@ -1,42 +1,38 @@
-name: Python CI
+name: CI Workflow
 
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code from the repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      # Step 2: Set up Python environment
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          python-version: '3.10'
+          node-version: '14'  # Specify your Node.js version here
 
-      # Step 3: Install dependencies
       - name: Install dependencies
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          # Install dependencies if requirements.txt exists
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
+        run: npm install  # Or use your preferred package manager
 
-      # Step 4: Run tests using unittest
       - name: Run tests
-        run: |
-          source venv/bin/activate
-          python -m unittest discover -s . -p "test_*.py"  # Adjust pattern if necessary
+        run: npm test  # Replace with your test script if different
+
+      - name: Build project
+        run: npm run build  # Replace with your build command
+
+      - name: Upload build artifact (optional)
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: ./build  # Specify the folder to upload
 
