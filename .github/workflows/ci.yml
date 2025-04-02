@@ -30,9 +30,4 @@ jobs:
       - name: Build project
         run: npm run build  # Replace with your build command
 
-      - name: Upload build artifact (optional)
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-artifact
-          path: ./build  # Specify the folder to upload
-
+   
