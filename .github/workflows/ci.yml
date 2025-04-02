@@ -1,43 +1,52 @@
-name: Python CI
+name: Sushant_Pipeline
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: 
+  push: 
+    branches: 
+      - master
+      - test 
+  pull_request: 
+    branches: 
+      - master
+    types: [closed] 
+  
+  
+
+  workflow_dispatch:  # Keep this if you want manual runs
+
 
 jobs:
-  build:
+
+ #this is an Job 1....
+  on-push:
+    if: github.event_name == 'push'  # Fix condition
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the code from the repository
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Step 2: Set up Python environment
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          # Install dependencies if requirements.txt exists
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
-
-      # Step 4: Run tests using unittest
-      - name: Run tests
-        run: |
-          source venv/bin/activate
-          python -m unittest discover -s . -p "test_*.py"  # Adjust pattern if necessary
+      - name: Print hello Radha
+        run: echo "hello Radha"
 
 
+#this is an Job 2 ....
+  on-pull_request:
+    if: github.event_name == 'pull_request'  # Fix condition
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print hello Sushant
+        run: echo "hello Sushant"
+       
+  on-pull_request-closed:
+          if: github.event_name == 'pull_request' && github.event.action == 'closed'  # Fix condition
+          runs-on: ubuntu-latest
+          steps:
+            - name: Print pull request closed
+              run: echo "pull request closed .."
+
+
+        
+  workflow-dispatch-job:
+     if: github.event_name == 'workflow_dispatch' 
+    
+     runs-on: ubuntu-latest
+     steps:
+        - name: Print workflow dispatch 
+          run: echo "Workflow has been run"
