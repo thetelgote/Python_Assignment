@@ -21,39 +21,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'  # Specify the Python version
+          python-version: '3.10'
 
       # Step 3: Install dependencies
       - name: Install dependencies
         run: |
-          # Create a virtual environment
           python -m venv venv
-          
-          # Activate the virtual environment
-          . venv/bin/activate
-          
-          # Upgrade pip to the latest version
+          source venv/bin/activate
           pip install --upgrade pip
-          
           # Install dependencies if requirements.txt exists
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
           fi
 
-      # Step 4: Run the tests using unittest
+      # Step 4: Run tests using unittest
       - name: Run tests
         run: |
-          # Activate the virtual environment
-          . venv/bin/activate
-          
-          # Discover and run tests
-          python -m unittest discover -s tests -p "test_*.py"  # Adjust "tests" if necessary
-          
-      # Step 5: (Optional) Upload test results as artifacts
-      - name: Upload test results
-        if: always()  # Upload even if the tests fail
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: test-results/  # Replace with the path where you save the test results, if applicable
+          source venv/bin/activate
+          python -m unittest discover -s . -p "test_*.py"  # Adjust pattern if necessary
+
 
