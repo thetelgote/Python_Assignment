@@ -1,0 +1,54 @@
+name: Flask CI/CD Pipeline
+
+# Trigger pipeline on push to 'main' branch or pull request to 'main'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted  # Use a self-hosted runner
+
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, 3.10]  # Run tests for multiple versions of Python
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Python environment
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # Step 4: Run tests
+    - name: Run tests
+      run: |
+        python -m unittest discover -s tests  # Alternatively, use pytest for testing
+
+    # Step 5: Skipped AWS deployment
+    # If you want to escape the AWS deployment, simply comment out or remove the following lines.
+    # - name: Deploy to AWS Elastic Beanstalk
+    #   if: success()  # Deploy only if tests pass
+    #   run: |
+    #     echo "Deploying to AWS Elastic Beanstalk..."
+    #     # Set up AWS CLI credentials (AWS keys stored as GitHub Secrets)
+    #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     aws configure set region us-west-2  # Replace with your AWS region
+    #     # Initialize Elastic Beanstalk application (replace app name and region as needed)
+    #     eb init -p python-3.8 my-flask-app --region us-west-2  # Change app name and region
+    #     eb deploy  # Deploy to AWS Elastic Beanstalk
